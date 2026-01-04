@@ -8,14 +8,14 @@ from flask import Flask, render_template_string
 app = Flask(__name__)
 
 class Pokemon:
-    def __init__(self, name, sprite):
+    def __init__(self, name : str, sprite : str):
         self.name = name
         self.sprite = sprite
 
     def __str__(self):
         return f"{self.name} - {self.sprite}"
     
-def fetch_pokemon_data(pokemon_name):
+def fetch_pokemon_data(pokemon_name : str) -> Pokemon:
     url = "https://pokeapi.co/api/v2/pokemon/{name}".format(name = pokemon_name)
     print(url)
     response = requests.get(url)

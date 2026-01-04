@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Build outputs
+build/
+dist/
+
+# Environment
+.env
+
+# C projects
+*.o
+*.out
+
+# Python
+__pycache__/
+.venv/

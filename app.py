@@ -3,7 +3,7 @@
 # Made by Joshua Luke.
 
 import requests
-from PIL import Image
+from flask import Flask
 
 class Pokemon:
     def __init__(self, name, sprite):
@@ -21,7 +21,7 @@ def fetch_pokemon_data(pokemon_name):
 
     target_pokemon = Pokemon(raw_data["name"], raw_data["sprites"]["front_shiny"] )
 
-    #print(target_pokemon)
+    print(target_pokemon)
 
 def main():
     fetch_pokemon_data("bulbasaur")

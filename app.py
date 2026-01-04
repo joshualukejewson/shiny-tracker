@@ -3,7 +3,9 @@
 # Made by Joshua Luke.
 
 import requests
-from flask import Flask
+from flask import Flask, render_template_string
+
+app = Flask(__name__)
 
 class Pokemon:
     def __init__(self, name, sprite):
@@ -19,12 +21,15 @@ def fetch_pokemon_data(pokemon_name):
     response = requests.get(url)
     raw_data = response.json()
 
-    target_pokemon = Pokemon(raw_data["name"], raw_data["sprites"]["front_shiny"] )
+    return Pokemon(raw_data["name"].capitalize(), raw_data["sprites"]["front_shiny"] )
 
-    print(target_pokemon)
-
-def main():
-    fetch_pokemon_data("bulbasaur")
+@app.route("/")
+def home():
+    pokemon = fetch_pokemon_data("bulbasaur")
+    return render_template_string("""
+        <h1>{{ pokemon.name }}</h1>
+        <img src="{{ pokemon.sprite }}">
+        """, pokemon=pokemon)
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)

@@ -1,2 +1,29 @@
-<h1>{{ pokemon.name }}</h1>
-<img src="{{ pokemon.sprite }}">
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Shiny Tracker</title>
+    </head>
+
+    <body>
+        <h1>Search for a Pokemon:</h1>
+        
+        <form action="/" method="POST">
+            <label for="pokemon_search">Search:</label>
+            <input type="text" id="pokemon_search" name="pokemon_search" value="{{ query or '' }}" placeholder="Enter search terms...">
+        
+            <!-- The submit button sends the form data -->
+            <button type="submit">Search Button</button>
+        </form>
+
+        
+       {% if pokemon %}
+            <h1>{{ pokemon.name }}</h1>
+            <img src="{{ pokemon.sprite }}">
+        {% else %}
+            <p>Search for a Pokémon to begin!</p>
+        {% endif %}
+
+    </body>
+</html>
+

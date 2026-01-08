@@ -5,8 +5,9 @@ class Pokemon:
     def __init__(self, name: str, sprite: str, shiny: str, count: int):
         self.name = name
         self.sprite = sprite
-        self.shimy = shiny
+        self.sprite_shiny = shiny
         self.count = count
+        self.shiny = False
 
     def increment(self):
         self.count += 1
@@ -42,23 +43,27 @@ def save_data(stored_pokemon):
             file.write("{name},{count}\n".format(name = pokemon.name, count=pokemon.count))
 
 
+"""
+retrieve_pokemon_data(): is run at the beggining of app launch, creates a stored txt file if it doesnt exist
+and reads the data from the file and stores it in a dictionary.
+
+@param: None
+@return: Dictionary[str, Pokemon]
+"""
 def retrieve_pokemon_data():
 
     stored_pokemon = {}
     file_path = "static/storedPokemon.txt"
-
+    
+    # see if file exists, if it doesn't create one and if it does open it and read the saved pokemon data.
     try:
         with open(file_path, "x") as file:
             pass
     except FileExistsError:
-        print("{filename} already exists.".format(filename = file_path))
-
-    with open(file_path, "r") as file:
-        for line in file:
-            data = line.split(",")
-            pokemon_name = data[0].lower()
-            encounters = int(data[1])
-            stored_pokemon[data[0]] = fetch_pokemon_data(pokemon_name, encounters)
+        with open(file_path, "r") as file:
+            for line in file:
+                pokemon_name, encounters = line.split(",")
+                stored_pokemon[pokemon_name] = fetch_pokemon_data(pokemon_name, int(encounters))
 
     return stored_pokemon
 

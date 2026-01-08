@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Shiny Tracker</title>
     <link rel="stylesheet" href="static/styles.css" />
+    <script src="/static/script.js"></script>
   </head>
 
   <body>
@@ -22,8 +23,16 @@
 
         {% if pokemon %}
         <div>
-          <h2>{{ pokemon.name.upper() }}</h2>
-          <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}" />
+          <h2>{{ pokemon.name.capitalize() }}</h2>
+          <img 
+          id="pokemon-sprite"
+          src="{{ pokemon.sprite }}" 
+          alt="{{ pokemon.name }}"
+          data-normal="{{ pokemon.sprite }}"
+          data-shiny="{{ pokemon.sprite_shiny }}"
+          onclick="toggleShiny(this)"
+          style="cursor: pointer"
+          />
           <p>Encounters: {{ pokemon.count }}</p>
 
           <form method="POST">

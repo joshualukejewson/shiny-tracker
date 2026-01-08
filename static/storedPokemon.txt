@@ -1,5 +1,0 @@
-dialga,7
-pikachu,14
-bulbasaur,0
-palkia,5
-rayquaza,0

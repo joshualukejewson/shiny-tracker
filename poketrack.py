@@ -24,14 +24,26 @@ class Pokemon:
 
 def fetch_pokemon_data(pokemon_name: str, count: int) -> Pokemon:
     url = "https://pokeapi.co/api/v2/pokemon/{name}".format(name=pokemon_name)
-    print(url)
     response = requests.get(url)
     raw_data = response.json()
 
+    front_default = ""
+    front_shiny = ""
+
+    if raw_data["sprites"]["other"]["showdown"]["front_default"]:
+        front_default = raw_data["sprites"]["other"]["showdown"]["front_default"]
+    else:
+        front_default = raw_data["sprites"]["front_default"]
+
+    if raw_data["sprites"]["other"]["showdown"]["front_shiny"]:
+        front_shiny = raw_data["sprites"]["other"]["showdown"]["front_shiny"]
+    else:
+        front_shiny = raw_data["sprites"]["front_shiny"]
+
     return Pokemon(
         raw_data["name"].lower(),
-        raw_data["sprites"]["front_default"],
-        raw_data["sprites"]["front_shiny"],
+        front_default,
+        front_shiny,
         count,
     )
 

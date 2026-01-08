@@ -9,9 +9,7 @@ from flask import Flask, render_template, request
 import poketrack
 
 app = Flask(__name__)
-
 stored_pokemon = poketrack.retrieve_pokemon_data()
-print(stored_pokemon)
 
 """
 Index Route that loads the main page, takes pokemon search input and displays the pokemon to the screen.

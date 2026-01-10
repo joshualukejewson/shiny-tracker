@@ -16,3 +16,18 @@ function setActionForm(action) {
   form.method = "post";
   form.submit();
 }
+
+const showButton = document.getElementById('showDialog');
+const closeButton = document.getElementById('closeDialog');
+const dialog = document.getElementById('settingsDialog');
+
+// Open the modal dialog
+showButton.addEventListener('click', () => {
+  dialog.showModal();
+});
+
+// Close the dialog
+closeButton.addEventListener('click', () => {
+  dialog.close();
+});
+

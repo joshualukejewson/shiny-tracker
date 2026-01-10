@@ -58,3 +58,15 @@ h1 {
   background-color: #04aa6d;
   color: white;
 }
+
+dialog {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Style the backdrop behind the modal */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}

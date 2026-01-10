@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
 from user import db, User
 from pokemon import Pokemon, add_pokemon_for_user
+from datetime import timedelta
 
 app = Flask(__name__)
 app.secret_key = "naruto_beats_sasuke_as_adults"
@@ -10,6 +10,10 @@ app.secret_key = "naruto_beats_sasuke_as_adults"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
+
+# Set cookie expiry for 30 days to retain login info.
+app.permanent_session_lifetime = timedelta(days=30)
+
 
 # =========== Routes ==========
 """
@@ -90,6 +94,8 @@ def login():
         password = request.form.get("password", "").strip()
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
+            # Set the session expiry to the 30 day delay.
+            session.permanent = True
             # Store both username and ID in session
             session["username"] = username
             session["id"] = user.id

@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: aquamarine;
+  background-color: white;
   color: darkblue;
 }
 
@@ -29,12 +29,12 @@ h1 {
   width: 250px;
   padding: 16px;
   border-radius: 10px;
-  background: white;
+  background: grey;
   text-align: center;
 }
 
 .navbar {
-  background-color: navy;
+  background-color: red;
   overflow: hidden;
   justify-content: space-between;
   display: flex;
@@ -42,11 +42,12 @@ h1 {
 
 .navbar a {
   float: left;
-  color: #f2f2f2;
+  color: white;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* Change the color of links on hover */
@@ -57,7 +58,7 @@ h1 {
 
 /* Add a color to the active/current link */
 .navbar a.active {
-  background-color: #04aa6d;
+  background-color: #000000;
   color: white;
 }
 

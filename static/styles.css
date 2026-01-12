@@ -73,3 +73,13 @@ dialog {
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+.settings {
+  display: flex;
+  flex-direction: row;
+}
+
+.settings-options {
+  display: flex;
+  flex-direction: column;
+}

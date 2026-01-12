@@ -12,6 +12,7 @@
   <body>
     <div>
       <nav class="navbar">
+        <div class="navbar-right">
         <a
           href="{{url_for('index')}}"
           class="{% if request.endpoint == 'index' %}active{% endif %}"
@@ -22,8 +23,11 @@
           class="{% if request.endpoint == 'login' %}active{% endif %}"
           >Login</a
         >
+         </div>
+        <div class="navbar-right">
         <a href="{{url_for('logout')}}">Logout</a>
-      </nav>
+        </div>
+        </nav>
     </div>
 
     <!-- Child content goes here -->

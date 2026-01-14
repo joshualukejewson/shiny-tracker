@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, jsonify, render_template, request, session, redirect, url_for
 from user import db, User
 from pokemon import Pokemon, add_pokemon_for_user
 from datetime import timedelta
@@ -39,30 +39,22 @@ def index():
     pokemon_data = None
     hunt_data = None
 
-    # Determine Pokémon name from POST data
     pokemon_name = None
+
+    # Handle search
     if request.method == "POST":
         if "search_btn" in request.form:
             pokemon_name = request.form.get("pokemon_search", "").strip().lower()
-        elif "increment_btn" in request.form or "reset_btn" in request.form:
-            pokemon_name = request.form.get("pokemon_name", "").strip().lower()
+            session["current_pokemon"] = pokemon_name
+
+    # Fallback to last searched Pokémon
+    if not pokemon_name:
+        pokemon_name = session.get("current_pokemon")
 
     if pokemon_name:
-
-        # Not in DB → fetch from API and add
-        pokemon = add_pokemon_for_user(session.get("id"), pokemon_name)
+        pokemon = add_pokemon_for_user(session["id"], pokemon_name)
         if pokemon:
-            hunt = add_hunt_for_user(session["id"], pokemon.id_no)  # type: ignore
-            # Handle increment/reset buttons
-            if request.method == "POST":
-                if "increment_btn" in request.form:
-                    hunt.increment()
-                    db.session.commit()
-                elif "reset_btn" in request.form:
-                    hunt.reset_count()
-                    db.session.commit()
-
-            # Pass data to template
+            hunt = add_hunt_for_user(session["id"], pokemon.id_no)
             pokemon_data = pokemon.to_dict()
             hunt_data = hunt.to_dict()
 
@@ -152,8 +144,34 @@ def logout():
     return redirect(url_for("login"))
 
 
+@app.route("/update", methods=["POST"])
+def update():
+    data = request.get_json()
+    pokemon_name = data["pokemon_name"]
+    action = data["action"]
+    hunt = None
+    user_id = session.get("id")
+    if not user_id:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    pokemon = Pokemon.query.filter_by(user_id=user_id, name=pokemon_name).first()
+    if pokemon:
+        hunt = Hunt.query.filter_by(user_id=user_id, pokemon_id=pokemon.id_no).first()
+
+    if hunt:
+        if action == "increment":
+            hunt.increment()
+            db.session.commit()
+        elif action == "reset":
+            hunt.reset_count()
+            db.session.commit()
+        return jsonify({"encounters": hunt.encounters})
+    else:
+        return jsonify({"error", "Hunt not found."}), 404
+
+
 # ======= App __init__ =========
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)

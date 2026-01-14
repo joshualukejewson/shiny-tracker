@@ -18,7 +18,7 @@
             >Home</a
           >
         </div>
-        <!-- Render logout button if signed in, if not only show login button. --> 
+        <!-- Render logout button if signed in, if not only show login button. -->
         <div class="navbar-right">
           {% if username %}
           <a href="{{url_for('logout')}}">Logout</a>
@@ -33,9 +33,7 @@
       </nav>
     </div>
 
-    <!-- Child content goes here -->
-    {% block body %}{% endblock %}
-
+    <div class="content">{% block body %}{% endblock %}</div>
     <footer>&copy; 2026 Joshua Luke</footer>
     <script src="/static/script.js"></script>
   </body>

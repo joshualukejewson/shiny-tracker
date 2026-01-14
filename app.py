@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from user import db, User
 from pokemon import Pokemon, add_pokemon_for_user
 from datetime import timedelta
+from hunt import Hunt, setup_hunt
 
 app = Flask(__name__)
 app.secret_key = "naruto_beats_sasuke_as_adults"
@@ -33,43 +34,58 @@ database, incrementing the encounters, and resetting the encounters to 0.
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "id" not in session:
-        # If user not logged in, redirect to login page
         return redirect(url_for("login"))
 
     pokemon_data = None
+    hunt_data = None
 
+    # Determine Pokémon name from POST data
+    pokemon_name = None
     if request.method == "POST":
-        # --- SEARCH BUTTON ---
         if "search_btn" in request.form:
             pokemon_name = request.form.get("pokemon_search", "").strip().lower()
-            if pokemon_name:
-                pokemon = add_pokemon_for_user(session["id"], pokemon_name)
-                pokemon_data = pokemon.to_dict() if pokemon else None
-
-        # --- INCREMENT BUTTON ---
-        elif "increment_btn" in request.form:
+        elif "increment_btn" in request.form or "reset_btn" in request.form:
             pokemon_name = request.form.get("pokemon_name", "").strip().lower()
-            pokemon = Pokemon.query.filter_by(
-                user_id=session["id"], name=pokemon_name
-            ).first()
-            if pokemon:
-                pokemon.increment()
-                db.session.commit()
-                pokemon_data = pokemon.to_dict()
 
-        # --- RESET BUTTON ---
-        elif "reset_btn" in request.form:
-            pokemon_name = request.form.get("pokemon_name", "").strip().lower()
-            pokemon = Pokemon.query.filter_by(
-                user_id=session["id"], name=pokemon_name
+    if pokemon_name:
+        # Try fetching Pokémon from DB
+        pokemon = Pokemon.query.filter_by(
+            user_id=session["id"], name=pokemon_name
+        ).first()
+
+        if not pokemon:
+            # Not in DB → fetch from API and add
+            pokemon = add_pokemon_for_user(session.get("id"), pokemon_name)
+
+        if pokemon:
+            # Ensure Hunt object exists for this Pokémon
+            hunt = Hunt.query.filter_by(
+                user_id=session["id"], pokemon_id=pokemon.id_no, is_completed=False
             ).first()
-            if pokemon:
-                pokemon.reset_count()
+
+            if not hunt:
+                hunt = Hunt(user_id=session["id"], pokemon_id=pokemon.id_no)  # type: ignore
+                db.session.add(hunt)
                 db.session.commit()
-                pokemon_data = pokemon.to_dict()
+
+            # Handle increment/reset buttons
+            if request.method == "POST":
+                if "increment_btn" in request.form:
+                    hunt.increment()
+                    db.session.commit()
+                elif "reset_btn" in request.form:
+                    hunt.reset_count()
+                    db.session.commit()
+
+            # Pass data to template
+            pokemon_data = pokemon.to_dict()
+            hunt_data = hunt
 
     return render_template(
-        "index.html", pokemon=pokemon_data, username=session.get("username")
+        "index.html",
+        pokemon=pokemon_data,
+        hunt=hunt_data,
+        username=session.get("username"),
     )
 
 

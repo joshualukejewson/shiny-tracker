@@ -1,4 +1,14 @@
 from user import db
+from enum import Enum
+
+
+class HuntMethods(Enum):
+    CHAIN = "chain"
+    MASUDA = "masuda"
+    SOFT_RESET = "soft-reset"
+    SOS = "sos"
+    RAND = "random-encounter"
+
 
 CONST_DEFAULT_ENCOUNTERS = 0
 CONST_DEFAULT_ODDS = 4096
@@ -12,7 +22,7 @@ class Hunt(db.Model):
         db.Integer, db.ForeignKey("userpokemon.id_no"), nullable=False
     )
     hunt_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    method = db.Column(db.String(15))
+    method = db.Column(db.String(15), default=HuntMethods.SOFT_RESET.value)
     shiny_charm = db.Column(db.Boolean, nullable=False, default=False)
     encounters = db.Column(db.Integer, nullable=False, default=CONST_DEFAULT_ENCOUNTERS)
     is_completed = db.Column(db.Boolean, nullable=False, default=False)
@@ -26,9 +36,30 @@ class Hunt(db.Model):
     def reset_count(self):
         self.encounters = CONST_DEFAULT_ENCOUNTERS
 
+    def to_dict(self):
+        return {
+            "user_id": self.user_id,
+            "pokemon_id": self.pokemon_id,
+            "method": self.method,
+            "shiny_charm": self.shiny_charm,
+            "encounters": self.encounters,
+            "is_completed": self.is_completed,
+        }
+
+
+def create_hunt(user_id: int, pokemon_id: int) -> Hunt:
+    return Hunt(
+        user_id=user_id,  # type: ignore
+        pokemon_id=pokemon_id,  # type: ignore
+    )
+
 
 def setup_hunt(user_id: int, pokemon_id: int):
-    return {
-        "user_id": user_id,
-        "pokemon_id": pokemon_id,
-    }
+    existing_hunt = Hunt.query.filter_by(user_id=user_id, pokemon_id=pokemon_id).first()
+    if existing_hunt:
+        return existing_hunt
+    else:
+        hunt_details = create_hunt(user_id, pokemon_id)
+        db.session.add(hunt_details)
+        db.session.commit()
+        return hunt_details

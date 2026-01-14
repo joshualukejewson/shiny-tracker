@@ -1,17 +1,59 @@
-# macOS
+# ---- OS files ----
 .DS_Store
+Thumbs.db
 
-# Build outputs
-build/
-dist/
+# ---- Editor / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Environment
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Env files (secrets!) ----
 .env
+.env.*
+!.env.example
 
-# C projects
-*.o
-*.out
+# ---- Build / dist ----
+dist/
+build/
+out/
 
-# Python
+# ---- Dependencies ----
+node_modules/
+vendor/
+
+# ---- Python ----
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 .venv/
+venv/
+env/
+
+# ---- Test / coverage ----
+.coverage
+htmlcov/
+pytest_cache/
+
+# ---- Temporary files ----
+tmp/
+temp/
+.cache/
+
+# ---- Flask ----
+instance/
+*.sqlite
+*.db
+
+# ---- Images / output ----
+*.jpg
+*.png
+*.mp4
+*.avi
+output/

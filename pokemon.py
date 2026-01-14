@@ -11,25 +11,12 @@ class Pokemon(db.Model):
     id_no = db.Column(db.Integer, primary_key=True, nullable=False)
     default_sprite = db.Column(db.String(100), nullable=False)
     shiny_sprite = db.Column(db.String(100), nullable=False)
-    shiny = db.Column(db.Boolean, default=False)
-    encounters = db.Column(db.Integer, nullable=False, default=0)
-
-    def increment(self):
-        self.encounters += 1
-
-    def get_count(self):
-        return self.encounters
-
-    def reset_count(self):
-        self.encounters = 0
 
     def to_dict(self):
         return {
             "name": self.name,
             "sprite": self.default_sprite,
             "sprite_shiny": self.shiny_sprite,
-            "count": self.encounters,
-            "shiny": self.shiny,
         }
 
 

@@ -2,39 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Shiny Tracker{% endblock %}</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
   </head>
   <body>
-    <div>
-      <nav class="navbar">
-        <div class="navbar-right">
-          <a
-            href="{{url_for('index')}}"
-            class="{% if request.endpoint == 'index' %}active{% endif %}"
-            >Home</a
-          >
-        </div>
-        <!-- Render logout button if signed in, if not only show login button. -->
-        <div class="navbar-right">
-          {% if username %}
-          <a href="{{url_for('logout')}}">Logout</a>
-          {% else %}
-          <a
-            href="{{url_for('login')}}"
-            class="{% if request.endpoint == 'login' %}active{% endif %}"
-            >Login</a
-          >
-          {% endif %}
-        </div>
-      </nav>
-    </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-left">
+        <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+          Home
+        </a>
+      </div>
 
-    <div class="content">{% block body %}{% endblock %}</div>
-    <footer>&copy; 2026 Joshua Luke</footer>
-    <script src="/static/script.js"></script>
+      <div class="navbar-right">
+        {% if username %}
+          <span class="navbar-user">Hi, {{ username.capitalize() }}</span>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">
+            Login
+          </a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <!-- Main content area -->
+    <main class="content">
+      {% block body %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      &copy; 2026 Joshua Luke
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
   </body>
 </html>

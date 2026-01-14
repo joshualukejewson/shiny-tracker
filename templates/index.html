@@ -2,22 +2,21 @@
 {% block body %}
 
 <div class="page">
+
   <img
     class="logo"
     id="pokemon-logo"
-    src="../static/assets/poketracker.png"
+    src="{{ url_for('static', filename='assets/poketracker.png') }}"
     alt="pokemon logo"
   />
 
   {% if username %}
-    <h1>Welcome {{ username.capitalize() }}!</h1>
+    <h1 class="welcome-text">Welcome, {{ username.capitalize() }}!</h1>
   {% endif %}
 
-  <div class="card">
-    <h1>Search for a Pokémon:</h1>
-
-    <!-- SEARCH (Flask-handled) -->
-    <form method="POST">
+  <div class="search-card card">
+    <h2>Search for a Pokémon</h2>
+    <form method="POST" class="search-form">
       <input
         type="text"
         name="pokemon_search"
@@ -26,56 +25,61 @@
       />
       <button type="submit" name="search_btn">Search</button>
     </form>
-
-    {% if pokemon %}
-      <div id="pokemon-card" data-pokemon-name="{{ pokemon.name }}">
-        <h2>{{ pokemon.name.capitalize() }}</h2>
-
-        <img
-          id="pokemon-sprite"
-          src="{{ pokemon.sprite }}"
-          alt="{{ pokemon.name }}"
-          data-normal="{{ pokemon.sprite }}"
-          data-shiny="{{ pokemon.sprite_shiny }}"
-          onclick="toggleShiny(this)"
-          style="cursor: pointer"
-        />
-
-        <p>
-          Encounters:
-          <span id="encounterCount">{{ hunt.encounters }}</span>
-        </p>
-
-        <!-- JS-handled buttons -->
-        <button id="incrementButton" type="button">+1 Encounter</button>
-        <button id="resetButton" type="button">Reset</button>
-
-        <button id="showDialog">Settings</button>
-
-        <dialog id="settingsDialog">
-          <h2>Settings</h2>
-
-          <div class="settings">
-            <img class="setting-sprite" src="{{ pokemon.sprite }}" />
-
-            <div class="settings-options">
-              <label>
-                <p>Shiny charm</p>
-                <input type="checkbox" />
-              </label>
-
-              <label>
-                <p>Masuda Method</p>
-                <input type="checkbox" />
-              </label>
-            </div>
-          </div>
-
-          <button id="closeDialog">Close</button>
-        </dialog>
-      </div>
-    {% endif %}
   </div>
+
+  {% if pokemon %}
+  <div class="pokemon-card card" id="pokemon-card" data-pokemon-name="{{ pokemon.name }}">
+    <h2>{{ pokemon.name.capitalize() }}</h2>
+
+    <!-- Sprites -->
+    <div class="sprites-container">
+      <img
+        class="pokemon-sprite"
+        src="{{ pokemon.sprite }}"
+        alt="{{ pokemon.name }} normal"
+        data-normal="{{ pokemon.sprite }}"
+        data-shiny="{{ pokemon.sprite_shiny }}"
+      />
+      <img
+        class="pokemon-sprite"
+        src="{{ pokemon.sprite_shiny }}"
+        alt="{{ pokemon.name }} shiny"
+      />
+    </div>
+
+    <p class="encounters-text">
+      Encounters: <span id="encounterCount">{{ hunt.encounters }}</span>
+    </p>
+
+    <!-- Action buttons -->
+    <div class="button-group">
+      <button id="incrementButton" type="button">+1 Encounter</button>
+      <button id="resetButton" type="button">Reset</button>
+      <button id="showDialog" type="button">Settings</button>
+    </div>
+
+    <!-- Settings modal -->
+    <dialog id="settingsDialog">
+      <h3>Settings</h3>
+      <div class="settings">
+        <img class="setting-sprite" src="{{ pokemon.sprite }}" />
+        <div class="settings-options">
+          <label>
+            Shiny Charm
+            <input type="checkbox" />
+          </label>
+          <label>
+            Masuda Method
+            <input type="checkbox" />
+          </label>
+        </div>
+      </div>
+      <button id="closeDialog" type="button">Close</button>
+    </dialog>
+
+  </div>
+  {% endif %}
+
 </div>
 
 {% endblock %}

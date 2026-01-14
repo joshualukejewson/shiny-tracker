@@ -1,32 +1,46 @@
-{% extends "base.html" %} {% block body %}
+{% extends "base.html" %}
 
+{% block body %}
 <div class="login-container">
-  <h1>Welcome</h1>
-  <form
-    id="auth-form"
-    data-login-url="{{ url_for('login') }}"
-    data-register-url="{{ url_for('register') }}"
-    method="post"
-  >
-    <input
-      type="text"
-      name="username"
-      placeholder="username"
-      class="input-field"
-    />
-    <input type="password" name="password" placeholder="password" />
-    <input
-      type="submit"
-      value="Login"
-      class="btn btn-login"
-      onclick="setActionForm('login')"
-    />
-    <input
-      type="button"
-      value="Register"
-      class="btn btn-login"
-      onclick="setActionForm('register')"
-    />
-  </form>
+  <div class="login-card">
+    <h1>Welcome to Shiny Tracker</h1>
+    <p class="subtitle">Log in or register to start tracking Pokémon</p>
+
+    <form
+      id="auth-form"
+      data-login-url="{{ url_for('login') }}"
+      data-register-url="{{ url_for('register') }}"
+      method="post"
+    >
+      <input
+        type="text"
+        name="username"
+        placeholder="Username"
+        class="input-field"
+        required
+      />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        class="input-field"
+        required
+      />
+      <div class="btn-group">
+        <input
+          type="submit"
+          value="Login"
+          class="btn btn-login"
+          onclick="setActionForm('login')"
+        />
+        <input
+          type="button"
+          value="Register"
+          class="btn btn-register"
+          onclick="setActionForm('register')"
+        />
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

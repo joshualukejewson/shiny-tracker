@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from user import db, User
 from pokemon import Pokemon, add_pokemon_for_user
 from datetime import timedelta
-from hunt import Hunt, setup_hunt
+from hunt import Hunt, add_hunt_for_user
 
 app = Flask(__name__)
 app.secret_key = "naruto_beats_sasuke_as_adults"
@@ -48,26 +48,11 @@ def index():
             pokemon_name = request.form.get("pokemon_name", "").strip().lower()
 
     if pokemon_name:
-        # Try fetching Pokémon from DB
-        pokemon = Pokemon.query.filter_by(
-            user_id=session["id"], name=pokemon_name
-        ).first()
 
-        if not pokemon:
-            # Not in DB → fetch from API and add
-            pokemon = add_pokemon_for_user(session.get("id"), pokemon_name)
-
+        # Not in DB → fetch from API and add
+        pokemon = add_pokemon_for_user(session.get("id"), pokemon_name)
         if pokemon:
-            # Ensure Hunt object exists for this Pokémon
-            hunt = Hunt.query.filter_by(
-                user_id=session["id"], pokemon_id=pokemon.id_no, is_completed=False
-            ).first()
-
-            if not hunt:
-                hunt = Hunt(user_id=session["id"], pokemon_id=pokemon.id_no)  # type: ignore
-                db.session.add(hunt)
-                db.session.commit()
-
+            hunt = add_hunt_for_user(session["id"], pokemon.id_no)  # type: ignore
             # Handle increment/reset buttons
             if request.method == "POST":
                 if "increment_btn" in request.form:
@@ -79,7 +64,7 @@ def index():
 
             # Pass data to template
             pokemon_data = pokemon.to_dict()
-            hunt_data = hunt
+            hunt_data = hunt.to_dict()
 
     return render_template(
         "index.html",

@@ -1,45 +1,58 @@
-body {
+/* ================= Global Styles ================= */
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   background-color: white;
   color: darkblue;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: sans-serif; /* optional for nicer text */
 }
 
 h1 {
   color: maroon;
+  margin: 0.5em 0;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
+/* ================= Layout Helpers ================= */
 .content {
   flex: 1;
 }
 
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #f1f1f1;
-}
-
-.login-container {
+/* ================= Navbar ================= */
+.navbar {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  justify-content: space-between;
+  background-color: red;
+  overflow: hidden;
 }
 
+.navbar a {
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Hover and active states */
+.navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #000;
+  color: white;
+}
+
+/* ================= Page & Card ================= */
 .page {
   display: flex;
-  flex-direction: column; /* stack vertically */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -47,8 +60,8 @@ footer {
 }
 
 .logo {
-  width: 75%; /* 75% of page width */
-  max-width: 750px; /* optional: stop it getting huge */
+  width: 75%;
+  max-width: 750px;
   height: auto;
   margin-bottom: 24px;
 }
@@ -61,35 +74,22 @@ footer {
   text-align: center;
 }
 
-.navbar {
-  background-color: red;
-  overflow: hidden;
-  justify-content: space-between;
+/* ================= Forms / Login ================= */
+.login-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.navbar a {
-  float: left;
-  color: white;
+/* ================= Footer ================= */
+footer {
   text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
+  padding: 1rem;
+  background-color: #f1f1f1;
 }
 
-/* Change the color of links on hover */
-.navbar a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-/* Add a color to the active/current link */
-.navbar a.active {
-  background-color: #000000;
-  color: white;
-}
-
+/* ================= Dialogs / Settings ================= */
 dialog {
   padding: 20px;
   border: 1px solid #ccc;
@@ -97,7 +97,6 @@ dialog {
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* Style the backdrop behind the modal */
 dialog::backdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -105,9 +104,11 @@ dialog::backdrop {
 .settings {
   display: flex;
   flex-direction: row;
+  gap: 10px; /* optional spacing */
 }
 
 .settings-options {
   display: flex;
   flex-direction: column;
+  gap: 8px; /* optional spacing */
 }

@@ -20,9 +20,11 @@ class Pokemon(db.Model):
         }
 
 
-def fetch_pokemon_data(user_id: int, pokemon_name: str) -> Pokemon:
+def fetch_pokemon_data(user_id: int, pokemon_name: str) -> Pokemon | None:
     url = "https://pokeapi.co/api/v2/pokemon/{name}".format(name=pokemon_name)
     response = requests.get(url)
+    if response.status_code == 404:
+        return None
     raw_data = response.json()
 
     front_default = ""
@@ -46,12 +48,15 @@ def fetch_pokemon_data(user_id: int, pokemon_name: str) -> Pokemon:
     )
 
 
-def add_pokemon_for_user(user_id, pokemon_name):
+def add_pokemon_for_user(user_id, pokemon_name) -> Pokemon | None:
     existing = Pokemon.query.filter_by(user_id=user_id, name=pokemon_name).first()
     if existing:
         return existing
     else:
         pokemon = fetch_pokemon_data(user_id, pokemon_name)
-        db.session.add(pokemon)
-        db.session.commit()
-        return pokemon
+        if pokemon:
+            db.session.add(pokemon)
+            db.session.commit()
+            return pokemon
+        else:
+            return None

@@ -2,6 +2,7 @@ from user import db
 from enum import Enum
 
 
+# Hunt method options.
 class HuntMethods(Enum):
     CHAIN = "chain"
     MASUDA = "masuda"
@@ -47,19 +48,12 @@ class Hunt(db.Model):
         }
 
 
-def create_hunt(user_id: int, pokemon_id: int) -> Hunt:
-    return Hunt(
-        user_id=user_id,  # type: ignore
-        pokemon_id=pokemon_id,  # type: ignore
-    )
-
-
-def setup_hunt(user_id: int, pokemon_id: int):
+def add_hunt_for_user(user_id, pokemon_id):
     existing_hunt = Hunt.query.filter_by(user_id=user_id, pokemon_id=pokemon_id).first()
     if existing_hunt:
         return existing_hunt
     else:
-        hunt_details = create_hunt(user_id, pokemon_id)
+        hunt_details = Hunt(user_id=user_id, pokemon_id=pokemon_id)  # type: ignore
         db.session.add(hunt_details)
         db.session.commit()
         return hunt_details
